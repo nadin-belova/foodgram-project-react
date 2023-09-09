@@ -20,6 +20,7 @@ class MyUser(AbstractUser):
         related_name='user_favorite_recipes',
         on_delete=SET_NULL,
         null=True,
+        blank=True
     )
     cart = ForeignKey(
         verbose_name="корзина",
@@ -27,6 +28,7 @@ class MyUser(AbstractUser):
         related_name='user_cart',
         on_delete=SET_NULL,
         null=True,
+        blank=True
     )
     own_recipe = ForeignKey(
         verbose_name="мой рецепт",
@@ -34,6 +36,7 @@ class MyUser(AbstractUser):
         related_name='author_id',
         on_delete=SET_NULL,
         null=True,
+        blank=True
     )
 
     class Meta:
