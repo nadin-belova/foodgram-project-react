@@ -28,6 +28,9 @@ class Unit(Model):
         verbose_name = "Единица измерения"
         verbose_name_plural = "Единицы измерения"
 
+    def __str__(self):
+        return self.name
+
 
 class Tag(Model):
     name = CharField(
@@ -47,6 +50,9 @@ class Tag(Model):
         verbose_name = "Тэг"
         verbose_name_plural = "Тэги"
 
+    def __str__(self):
+        return self.name
+
 
 class Ingredient(Model):
     name = CharField(
@@ -57,6 +63,9 @@ class Ingredient(Model):
     class Meta:
         verbose_name = "Ингредиент"
         verbose_name_plural = "Ингредиенты"
+
+    def __str__(self):
+        return self.name
 
 
 class RecipeIngredient(Model):
@@ -81,9 +90,16 @@ class RecipeIngredient(Model):
         verbose_name = "Ингредиенты рецепта"
         verbose_name_plural = "Ингредиенты рецептов"
 
+    def __str__(self):
+        return (
+            self.ingredient.name + ', ' +
+            self.quantity.__str__() + ' ' +
+            self.unit.name
+        )
+
 
 class Recipe(Model):
-    # author_id = 
+    # author_id =
     name = CharField(
         verbose_name="рецепт",
         max_length=MAX_LEN_RECIPE_CHARFIELD,
@@ -91,6 +107,8 @@ class Recipe(Model):
     picture = CharField(
         verbose_name="картинка",
         max_length=MAX_LEN_PICTURE_CHARFIELD,
+        blank=True
+
     )
     description = TextField(
         verbose_name="описание",
@@ -115,3 +133,6 @@ class Recipe(Model):
     class Meta:
         verbose_name = "Рецепт"
         verbose_name_plural = "Рецепты"
+
+    def __str__(self):
+        return self.name
