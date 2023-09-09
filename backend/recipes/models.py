@@ -24,6 +24,10 @@ class Unit(Model):
         max_length=MAX_LEN_UNIT_CHARFIELD,
     )
 
+    class Meta:
+        verbose_name = "Единица измерения"
+        verbose_name_plural = "Единицы измерения"
+
 
 class Tag(Model):
     name = CharField(
@@ -38,13 +42,21 @@ class Tag(Model):
         verbose_name="слаг тэга",
         max_length=MAX_LEN_TAG_SLUG_CHARFIELD
     )
-  
+
+    class Meta:
+        verbose_name = "Тэг"
+        verbose_name_plural = "Тэги"
+
 
 class Ingredient(Model):
     name = CharField(
         verbose_name="Ингредиент",
         max_length=MAX_LEN_INGREDIENT_CHARFIELD,
     )
+
+    class Meta:
+        verbose_name = "Ингредиент"
+        verbose_name_plural = "Ингредиенты"
 
 
 class RecipeIngredient(Model):
@@ -64,6 +76,10 @@ class RecipeIngredient(Model):
         on_delete=PROTECT,
         null=False,
     )
+
+    class Meta:
+        verbose_name = "Ингредиенты рецепта"
+        verbose_name_plural = "Ингредиенты рецептов"
 
 
 class Recipe(Model):
@@ -95,3 +111,7 @@ class Recipe(Model):
     cooking_time = IntegerField(
         verbose_name="время приготовления",
     )
+
+    class Meta:
+        verbose_name = "Рецепт"
+        verbose_name_plural = "Рецепты"
