@@ -18,6 +18,11 @@ MAX_LEN_RECIPE_CHARFIELD = 100
 MAX_LEN_PICTURE_CHARFIELD = 255
 
 
+# models.CASCADE
+# models.PROTECT — запрещает удалять пользователя, пока у него есть посты.
+# models.SET_NULL — посты останутся в БД даже при удалении автора, но значение в поле author у постов изменится на None.
+# models.SET_DEFAULT
+
 class Tag(Model):
     name = CharField(
         verbose_name="название тэга",
