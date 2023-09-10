@@ -18,20 +18,6 @@ MAX_LEN_RECIPE_CHARFIELD = 100
 MAX_LEN_PICTURE_CHARFIELD = 255
 
 
-class Unit(Model):
-    name = CharField(
-        verbose_name="Единица измерения",
-        max_length=MAX_LEN_UNIT_CHARFIELD,
-    )
-
-    class Meta:
-        verbose_name = "Единица измерения"
-        verbose_name_plural = "Единицы измерения"
-
-    def __str__(self):
-        return self.name
-
-
 class Tag(Model):
     name = CharField(
         verbose_name="название тэга",
@@ -59,6 +45,10 @@ class Ingredient(Model):
         verbose_name="Ингредиент",
         max_length=MAX_LEN_INGREDIENT_CHARFIELD,
     )
+    unit = CharField(
+        verbose_name="Единица измерения",
+        max_length=MAX_LEN_UNIT_CHARFIELD,
+    )
 
     class Meta:
         verbose_name = "Ингредиент"
@@ -79,12 +69,6 @@ class RecipeIngredient(Model):
         verbose_name="количество",
         null=False,
     )
-    unit = ForeignKey(
-        verbose_name="единица измерения",
-        to=Unit,
-        on_delete=PROTECT,
-        null=False,
-    )
 
     class Meta:
         verbose_name = "Ингредиенты рецепта"
@@ -93,8 +77,7 @@ class RecipeIngredient(Model):
     def __str__(self):
         return (
             self.ingredient.name + ', ' +
-            self.quantity.__str__() + ' ' +
-            self.unit.name
+            self.quantity.__str__() 
         )
 
 
