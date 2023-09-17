@@ -9,10 +9,11 @@ from django.contrib.auth.models import AbstractUser
 
 class MyUser(AbstractUser):
     # subscriptions = ForeignKey(
-    #     verbose_name="пользователь",
-    #     to='MyUser',
+    #     verbose_name="подписки",
+    #     to='self',  # Сам на себя
     #     on_delete=SET_NULL,
     #     null=True,
+    #     blank=True
     # )
     favorite_recipes = ForeignKey(
         verbose_name="любимый рецепт",

@@ -6,6 +6,7 @@ from django.db.models import (
     IntegerField,
     TextField,
 )
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
@@ -60,7 +61,7 @@ class Ingredient(Model):
         verbose_name_plural = "Ингредиенты"
 
     def __str__(self):
-        return self.name
+        return f'{self.name}, {self.unit}'
 
 
 class RecipeIngredient(Model):
@@ -108,11 +109,9 @@ class Recipe(Model):
         on_delete=PROTECT,
         null=False,
     )
-    tag = ForeignKey(
+    tags = models.ManyToManyField(
+        Tag,
         verbose_name="тэг",
-        to=Tag,
-        on_delete=PROTECT,
-        null=True,
     )
     cooking_time = IntegerField(
         verbose_name="время приготовления",

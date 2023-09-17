@@ -8,13 +8,14 @@ from api.serializers import (
 
 
 class RecipeViewSet(ModelViewSet):
-    queryset = Recipe.objects.all() # .select_related("author")
+    queryset = Recipe.objects.all()  # .select_related("author")
     serializer_class = RecipeSerializer
 
-    def get_queryset(self) -> QuerySet[Recipe]:
-        queryset = self.queryset
+    # def get_queryset(self) -> QuerySet[Recipe]:
+    #     queryset = self.queryset
 
         # tags: list = self.request.query_params.getlist(UrlQueries.TAGS.value)
+        # tags: list = self.request.query_params.getlist('tags')
         # if tags:
         #     queryset = queryset.filter(tags__slug__in=tags).distinct()
 
@@ -22,4 +23,4 @@ class RecipeViewSet(ModelViewSet):
         # if author:
         #     queryset = queryset.filter(author=author)
 
-        return queryset
+        # return queryset
