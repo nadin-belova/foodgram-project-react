@@ -3,7 +3,7 @@ from .models import MyUser
 from recipes.models import (
     Tag,
     Ingredient,
-    RecipeIngredient,
+    # RecipeIngredient,
     Recipe
 )
 
@@ -11,5 +11,5 @@ from recipes.models import (
 admin.site.register(MyUser)
 admin.site.register(Tag)
 admin.site.register(Ingredient)
-admin.site.register(RecipeIngredient)
+# admin.site.register(RecipeIngredient)
 admin.site.register(Recipe)

@@ -1,13 +1,15 @@
 from django.db.models import (
     Model,
     CharField,
+    ImageField,
     ForeignKey,
     PROTECT,
     IntegerField,
     TextField,
+    ManyToManyField,
 )
 from django.contrib.contenttypes.models import ContentType
-from django.db import models
+
 
 
 MAX_LEN_TAG_NAME_CHARFIELD = 50
@@ -29,7 +31,7 @@ class Tag(Model):
         verbose_name="название тэга",
         max_length=MAX_LEN_TAG_NAME_CHARFIELD
     )
-    color_code = CharField(
+    color = CharField(
         verbose_name="цвет тэга",
         max_length=MAX_LEN_TAG_COLOR_CHARFIELD
     )
@@ -51,9 +53,13 @@ class Ingredient(Model):
         verbose_name="Ингредиент",
         max_length=MAX_LEN_INGREDIENT_CHARFIELD,
     )
-    unit = CharField(
+    measurement_unit = CharField(
         verbose_name="Единица измерения",
         max_length=MAX_LEN_UNIT_CHARFIELD,
+    )
+    amount = IntegerField(
+        verbose_name="количество",
+        null=False,
     )
 
     class Meta:
@@ -61,30 +67,27 @@ class Ingredient(Model):
         verbose_name_plural = "Ингредиенты"
 
     def __str__(self):
-        return f'{self.name}, {self.unit}'
+        return f'{self.name}, {self.amount} {self.measurement_unit}'
 
 
-class RecipeIngredient(Model):
-    ingredient = ForeignKey(
-        verbose_name="ингредиенты рецепта",
-        to=Ingredient,
-        on_delete=PROTECT,
-        null=False,
-    )
-    quantity = IntegerField(
-        verbose_name="количество",
-        null=False,
-    )
+# class RecipeIngredient(Model):
+#     ingredient = ForeignKey(
+#         verbose_name="ингредиенты рецепта",
+#         to=Ingredient,
+#         on_delete=PROTECT,
+#         null=False,
+#     )
+    
 
-    class Meta:
-        verbose_name = "Ингредиенты рецепта"
-        verbose_name_plural = "Ингредиенты рецептов"
+    # class Meta:
+    #     verbose_name = "Ингредиенты рецепта"
+    #     verbose_name_plural = "Ингредиенты рецептов"
 
-    def __str__(self):
-        return (
-            self.ingredient.name + ', ' +
-            self.quantity.__str__() 
-        )
+    # def __str__(self):
+    #     return (
+    #         self.ingredient.name + ', ' +
+    #         self.quantity.__str__() 
+    #     )
 
 
 class Recipe(Model):
@@ -93,7 +96,7 @@ class Recipe(Model):
         verbose_name="рецепт",
         max_length=MAX_LEN_RECIPE_CHARFIELD,
     )
-    picture = CharField(
+    image = ImageField(
         verbose_name="картинка",
         max_length=MAX_LEN_PICTURE_CHARFIELD,
         blank=True
@@ -103,13 +106,11 @@ class Recipe(Model):
         verbose_name="описание",
 
     )
-    ingredient = ForeignKey(
+    ingredients = ManyToManyField(
+        Ingredient,
         verbose_name="ингредиент",
-        to=RecipeIngredient,
-        on_delete=PROTECT,
-        null=False,
     )
-    tags = models.ManyToManyField(
+    tags = ManyToManyField(
         Tag,
         verbose_name="тэг",
     )
