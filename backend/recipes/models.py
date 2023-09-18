@@ -3,13 +3,13 @@ from django.db.models import (
     CharField,
     ImageField,
     ForeignKey,
-    PROTECT,
+    # PROTECT,
     DO_NOTHING,
     IntegerField,
     TextField,
     ManyToManyField,
 )
-from django.contrib.contenttypes.models import ContentType
+# from django.contrib.contenttypes.models import ContentType
 # from users.models import MyUser
 
 
@@ -24,7 +24,8 @@ MAX_LEN_PICTURE_CHARFIELD = 255
 
 # models.CASCADE
 # models.PROTECT — запрещает удалять пользователя, пока у него есть посты.
-# models.SET_NULL — посты останутся в БД даже при удалении автора, но значение в поле author у постов изменится на None.
+# models.SET_NULL — посты останутся в БД даже при удалении автора,
+# но значение в поле author у постов изменится на None.
 # models.SET_DEFAULT
 
 class Tag(Model):
@@ -78,8 +79,6 @@ class Ingredient(Model):
 #         on_delete=PROTECT,
 #         null=False,
 #     )
-    
-
     # class Meta:
     #     verbose_name = "Ингредиенты рецепта"
     #     verbose_name_plural = "Ингредиенты рецептов"
@@ -87,7 +86,7 @@ class Ingredient(Model):
     # def __str__(self):
     #     return (
     #         self.ingredient.name + ', ' +
-    #         self.quantity.__str__() 
+    #         self.quantity.__str__()
     #     )
 
 
