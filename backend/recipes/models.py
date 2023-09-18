@@ -4,12 +4,13 @@ from django.db.models import (
     ImageField,
     ForeignKey,
     PROTECT,
+    DO_NOTHING,
     IntegerField,
     TextField,
     ManyToManyField,
 )
 from django.contrib.contenttypes.models import ContentType
-
+# from users.models import MyUser
 
 
 MAX_LEN_TAG_NAME_CHARFIELD = 50
@@ -91,7 +92,11 @@ class Ingredient(Model):
 
 
 class Recipe(Model):
-    # author_id =
+    author = ForeignKey(
+        verbose_name="автор",
+        to='users.Myuser',
+        on_delete=DO_NOTHING
+    )
     name = CharField(
         verbose_name="рецепт",
         max_length=MAX_LEN_RECIPE_CHARFIELD,
@@ -100,7 +105,6 @@ class Recipe(Model):
         verbose_name="картинка",
         max_length=MAX_LEN_PICTURE_CHARFIELD,
         blank=True
-
     )
     description = TextField(
         verbose_name="описание",
