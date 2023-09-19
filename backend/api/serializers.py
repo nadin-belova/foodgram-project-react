@@ -1,10 +1,10 @@
-
-#from drf_extra_fields.fields import Base64ImageField
+# from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Recipe, Tag, Ingredient
 from users.models import MyUser
 from rest_framework.serializers import (
     ModelSerializer,
-    SerializerMethodField, CharField
+    SerializerMethodField,
+    CharField
 )
 from django.db.models import F, QuerySet
 
@@ -48,6 +48,12 @@ class RecipeSerializer(ModelSerializer):
     class Meta:
         model = Recipe
         fields = '__all__'
+
+    # def get_author(self, recipe: Recipe) -> QuerySet[dict]:
+    #     author = recipe.author_id.values(
+    #         "id", "name", "unit", amount=F("recipe__quantity")
+    #     )
+    #     return author
 
     # def get_ingredients(self, recipe: Recipe) -> QuerySet[dict]:
     #     ingredient = recipe.ingredient.values(

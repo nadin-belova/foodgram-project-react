@@ -91,11 +91,11 @@ class Ingredient(Model):
 
 
 class Recipe(Model):
-    author = ForeignKey(
-        verbose_name="автор",
-        to='users.Myuser',
-        on_delete=DO_NOTHING
-    )
+    # author = ForeignKey(
+    #     verbose_name="автор",
+    #     to='users.Myuser',
+    #     on_delete=DO_NOTHING
+    # )
     name = CharField(
         verbose_name="рецепт",
         max_length=MAX_LEN_RECIPE_CHARFIELD,
@@ -107,7 +107,6 @@ class Recipe(Model):
     )
     description = TextField(
         verbose_name="описание",
-
     )
     ingredients = ManyToManyField(
         Ingredient,
