@@ -8,3 +8,4 @@ class RecipesConfig(AppConfig):
 
     def ready(self) -> None:
         from core import signals
+        signals

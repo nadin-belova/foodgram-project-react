@@ -1,7 +1,5 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Model
-from rest_framework.permissions import DjangoModelPermissions
-from rest_framework.permissions import IsAuthenticated 
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 from rest_framework.routers import APIRootView
 
