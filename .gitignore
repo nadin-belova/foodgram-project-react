@@ -1,4 +1,4 @@
-media
+static/
 media/
 
 # Byte-compiled / optimized / DLL files
@@ -107,6 +107,8 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venv/
+.env/
 env/
 venv/
 ENV/
@@ -133,3 +135,4 @@ dmypy.json
 
 # .idea
 .idea
+.vscode
