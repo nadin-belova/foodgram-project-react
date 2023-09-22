@@ -3,8 +3,6 @@ from api.paginators import PageLimitPagination
 from api.permissions import (
     AdminOrReadOnly,
     AuthorStaffOrReadOnly,
-    DjangoModelPermissions,
-    IsAuthenticated,
 )
 from api.serializers import (
     IngredientSerializer,
@@ -22,6 +20,7 @@ from django.http.response import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
 from recipes.models import Carts, Favorites, Ingredient, Recipe, Tag
 from rest_framework.decorators import action
+from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.routers import APIRootView
 from rest_framework.status import HTTP_400_BAD_REQUEST
