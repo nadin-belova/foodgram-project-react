@@ -1,20 +1,25 @@
 from collections import OrderedDict
 
-from core.services import recipe_ingredients_set
-from core.validators import ingredients_validator, tags_exist_validator
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models import F, QuerySet
 from django.db.transaction import atomic
+
 from drf_extra_fields.fields import Base64ImageField
+
+from core.services import recipe_ingredients_set
+from core.validators import ingredients_validator, tags_exist_validator
+
 from recipes.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
+
 
 User = get_user_model()
 
 
 class ShortRecipeSerializer(ModelSerializer):
     """
+    Сериализатор для краткой информации о рецептах.
     """
 
     class Meta:
@@ -25,6 +30,7 @@ class ShortRecipeSerializer(ModelSerializer):
 
 class UserSerializer(ModelSerializer):
     """
+    Сериализатор для пользователей.
     """
 
     is_subscribed = SerializerMethodField()
@@ -45,6 +51,8 @@ class UserSerializer(ModelSerializer):
 
     def get_is_subscribed(self, obj: User) -> bool:
         """
+        Возвращает True, если текущий пользователь подписан
+        на пользователя obj, иначе - False.
         """
         user = self.context.get("request").user
 
@@ -55,6 +63,7 @@ class UserSerializer(ModelSerializer):
 
     def create(self, validated_data: dict) -> User:
         """
+        Создает и возвращает нового пользователя.
         """
         user = User(
             email=validated_data["email"],
@@ -69,6 +78,7 @@ class UserSerializer(ModelSerializer):
 
 class UserSubscribeSerializer(UserSerializer):
     """
+    Сериализатор для подписки на пользователей.
     """
 
     recipes = ShortRecipeSerializer(many=True, read_only=True)
@@ -90,17 +100,21 @@ class UserSubscribeSerializer(UserSerializer):
 
     def get_is_subscribed(*args) -> bool:
         """
+        Возвращает True всегда, так как это сериализатор для подписки.
         """
         return True
 
     def get_recipes_count(self, obj: User) -> int:
         """
+        Возвращает количество рецептов пользователя.
         """
         return obj.recipes.count()
 
 
 class TagSerializer(ModelSerializer):
-    """Сериализатор для тэгов."""
+    """
+    Сериализатор для тэгов.
+    """
 
     class Meta:
         model = Tag
@@ -109,15 +123,18 @@ class TagSerializer(ModelSerializer):
 
     def validate(self, data: OrderedDict) -> OrderedDict:
         """
+        Удаляет символы '#' из названия тегов и приводит к верхнему регистру.
         """
         for attr, value in data.items():
-            data[attr] = value.sttrip(" #").upper()
+            data[attr] = value.strip(" #").upper()
 
         return data
 
 
 class IngredientSerializer(ModelSerializer):
-    """Сериализатор для ингридиентов."""
+    """
+    Сериализатор для ингредиентов.
+    """
 
     class Meta:
         model = Ingredient
@@ -126,7 +143,9 @@ class IngredientSerializer(ModelSerializer):
 
 
 class RecipeSerializer(ModelSerializer):
-    """Сериализатор для рецептов."""
+    """
+    Сериализатор для рецептов.
+    """
 
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
@@ -156,6 +175,7 @@ class RecipeSerializer(ModelSerializer):
 
     def get_ingredients(self, recipe: Recipe) -> QuerySet[dict]:
         """
+        Возвращает информацию об ингредиентах для данного рецепта.
         """
         ingredients = recipe.ingredients.values(
             "id", "name", "measurement_unit", amount=F("recipe__amount")
@@ -164,6 +184,8 @@ class RecipeSerializer(ModelSerializer):
 
     def get_is_favorited(self, recipe: Recipe) -> bool:
         """
+        Возвращает True, если текущий пользователь
+        добавил рецепт в избранное, иначе - False.
         """
         user = self.context.get("view").request.user
 
@@ -174,6 +196,8 @@ class RecipeSerializer(ModelSerializer):
 
     def get_is_in_shopping_cart(self, recipe: Recipe) -> bool:
         """
+        Возвращает True, если текущий пользователь
+        добавил рецепт в список покупок, иначе - False.
         """
         user = self.context.get("view").request.user
 
@@ -184,6 +208,7 @@ class RecipeSerializer(ModelSerializer):
 
     def validate(self, data: OrderedDict) -> OrderedDict:
         """
+        Проверяет валидность данных при создании или обновлении рецепта.
         """
         tags_ids: list[int] = self.initial_data.get("tags")
         ingredients = self.initial_data.get("ingredients")
@@ -206,6 +231,7 @@ class RecipeSerializer(ModelSerializer):
     @atomic
     def create(self, validated_data: dict) -> Recipe:
         """
+        Создает и возвращает новый рецепт.
         """
         tags: list[int] = validated_data.pop("tags")
         ingredients: dict[int, tuple] = validated_data.pop("ingredients")
@@ -217,6 +243,7 @@ class RecipeSerializer(ModelSerializer):
     @atomic
     def update(self, recipe: Recipe, validated_data: dict):
         """
+        Обновляет информацию о рецепте.
         """
         tags = validated_data.pop("tags")
         ingredients = validated_data.pop("ingredients")
