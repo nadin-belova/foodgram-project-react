@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "api.apps.ApiConfig",
     "recipes.apps.RecipesConfig",
     "users.apps.UsersConfig",
-    # 'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +80,7 @@ AUTH_USER_MODEL = "users.MyUser"
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },  # noqa E501
+    },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
@@ -132,7 +131,7 @@ MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-PASSWORD_RESET_TIMEOUT = 60 * 60  # 1 hour
+PASSWORD_RESET_TIMEOUT = 60 * 60
 
 LOGGING = {
     "version": 1,
@@ -144,7 +143,7 @@ LOGGING = {
     },
     "loggers": {
         "django.db.backends": {
-            "level": "DEBUG",  # if DEBUG else 'ERROR',
+            "level": "DEBUG",
             "handlers": [
                 "console",
             ],
