@@ -68,14 +68,13 @@ class Ingredient(Model):
     name = CharField(
         verbose_name="Ингредиент",
         max_length=Limits.MAX_LEN_RECIPES_CHARFIELD.value,
-        db_index=True, 
+        db_index=True,
     )
     measurement_unit = CharField(
         verbose_name="Единицы измерения",
         max_length=24,
         db_index=True,
     )
-
 
     class Meta:
         verbose_name = "Ингридиент"
@@ -189,6 +188,7 @@ class Recipe(Model):
 
 class AmountIngredient(Model):
     """
+    Количество ингредиентов в рецепте
     """
 
     recipe = ForeignKey(

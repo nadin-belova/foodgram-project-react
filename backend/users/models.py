@@ -25,6 +25,7 @@ CharField.register_lookup(Length)
 
 class MyUser(AbstractUser):
     """
+    Пользователь
     """
 
     email = EmailField(
@@ -112,6 +113,8 @@ class MyUser(AbstractUser):
 
     def __normalize_human_names(self, name: str) -> str:
         """
+        Для нормализации адреса электронной почты
+        преобразуйте в нижний регистр часть с доменом.
         """
         storage = [None] * len(name)
         title = True
@@ -138,6 +141,12 @@ class MyUser(AbstractUser):
 
 class Subscriptions(Model):
     """
+    Модель подписок пользователей на авторов рецептов.
+
+    Attributes:
+        author (MyUser): Автор рецепта, на которого оформлена подписка.
+        user (MyUser): Пользователь, оформивший подписку на автора рецепта.
+        date_added (DateTimeField): Дата создания подписки.
     """
 
     author = ForeignKey(

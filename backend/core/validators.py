@@ -12,6 +12,14 @@ if TYPE_CHECKING:
 @deconstructible
 class OneOfTwoValidator:
     """
+    Валидатор, который проверяет, что переданное значение состоит
+    либо из букв русского (кириллица)
+    либо из букв английского (латинского) алфавита,
+    но не из обоих одновременно.
+
+    :param first_regex: Регулярное выражение для первого набора символов.
+    :param second_regex: Регулярное выражение для второго набора символов.
+    :param field: Название поля для использования в сообщении об ошибке.
     """
 
     first_regex = "[^а-яёА-ЯЁ]+"
@@ -44,6 +52,12 @@ class OneOfTwoValidator:
 @deconstructible
 class MinLenValidator:
     """
+    Валидатор, который проверяет,
+    что переданное значение имеет достаточную длину.
+
+    :param min_len: Минимальная длина, которую должно иметь значение.
+    :param field: Название поля для использования в сообщении об ошибке.
+    :param message: Пользовательское сообщение об ошибке.
     """
 
     min_len = 0
@@ -72,6 +86,12 @@ class MinLenValidator:
 
 def hex_color_validator(color: str) -> str:
     """
+    Валидатор, который проверяет, что переданный цвет
+    является корректным шестнадцатеричным цветом и возвращает его
+    в верхнем регистре с символом "#" в начале.
+
+    :param color: Строка с цветовым кодом.
+    :return: Корректный цветовой код.
     """
 
     color = color.strip(" #")
@@ -88,6 +108,12 @@ def hex_color_validator(color: str) -> str:
 
 def tags_exist_validator(tags_ids: list[int | str], Tag: "Tag") -> list["Tag"]:
     """
+    Валидатор, который проверяет,
+    что переданные идентификаторы тэгов существуют.
+
+    :param tags_ids: Список идентификаторов тэгов.
+    :param Tag: Модель тэга.
+    :return: Список существующих тэгов.
     """
     if not tags_ids:
         raise ValidationError("Не указаны тэги")
@@ -105,6 +131,11 @@ def ingredients_validator(
     Ingredient: "Ingredient",
 ) -> dict[int, tuple["Ingredient", int]]:
     """
+    Валидатор, который проверяет корректность переданных ингредиентов.
+
+    :param ingredients: Список словарей с ингредиентами и их количеством.
+    :param Ingredient: Модель ингредиента.
+    :return: Словарь с корректными
     """
     if not ingredients:
         raise ValidationError("Не указаны ингридиенты")

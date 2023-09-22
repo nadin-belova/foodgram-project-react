@@ -13,6 +13,10 @@ app_name = "api"
 
 class RuDefaultRouter(DefaultRouter):
     """
+    Роутер для API с поддержкой кастомного APIRootView.
+
+    Использует кастомное представление APIRootView
+    `BaseAPIRootView` вместо стандартного.
     """
 
     APIRootView = BaseAPIRootView

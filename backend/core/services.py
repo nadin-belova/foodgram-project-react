@@ -16,6 +16,13 @@ def recipe_ingredients_set(
     recipe: Recipe, ingredients: dict[int, tuple["Ingredient", int]]
 ) -> None:
     """
+    Добавляет ингредиенты в рецепт.
+
+    :param recipe: Рецепт, в который добавляются ингредиенты.
+    :param ingredients: Словарь с ингредиентами и их количеством.
+        Ключи - это ID ингредиентов,
+        значения - кортежи (Ингредиент, количество).
+    :return: None
     """
     objs = []
 
@@ -31,6 +38,10 @@ def recipe_ingredients_set(
 
 def create_shoping_list(user: "MyUser") -> str:
     """
+    Создает список покупок для пользователя.
+
+    :param user: Пользователь, для которого создается список покупок.
+    :return: Строка с созданным списком покупок.
     """
     shopping_list = [
         f"Список покупок для:\n\n{user.first_name}\n"
@@ -54,6 +65,10 @@ def create_shoping_list(user: "MyUser") -> str:
 
 def maybe_incorrect_layout(url_string: str) -> str:
     """
+    Проверяет строку URL на возможно некорректное расположение символов.
+
+    :param url_string: Строка URL для проверки.
+    :return: Преобразованная строка URL.
     """
     equals = str.maketrans(
         "qwertyuiop[]asdfghjkl;'zxcvbnm,./",
