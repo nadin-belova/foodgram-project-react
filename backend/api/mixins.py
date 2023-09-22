@@ -12,6 +12,7 @@ from rest_framework.status import (
 
 class AddDelViewMixin:
     """
+    Миксин для добавления и удаления связей между объектами.
     """
 
     add_serializer: ModelSerializer | None = None
@@ -19,6 +20,13 @@ class AddDelViewMixin:
 
     def _create_relation(self, obj_id: int | str) -> Response:
         """
+        Создает связь между объектами.
+
+        Args:
+            obj_id (int | str): Идентификатор объекта.
+
+        Returns:
+            Response: Ответ API с данными о созданной связи.
         """
         obj = get_object_or_404(self.queryset, pk=obj_id)
         try:
@@ -34,6 +42,13 @@ class AddDelViewMixin:
 
     def _delete_relation(self, q: Q) -> Response:
         """
+        Удаляет связь между объектами.
+
+        Args:
+            q (Q): Условие для поиска связи.
+
+        Returns:
+            Response: Ответ API об успешном удалении связи.
         """
         deleted, _ = (
             self.link_model.objects.filter(q & Q(user=self.request.user))
