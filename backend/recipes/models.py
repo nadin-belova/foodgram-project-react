@@ -63,16 +63,19 @@ class Tag(Model):
 
 
 class Ingredient(Model):
-    """Ингридиенты"""
+    """Ингредиенты"""
 
     name = CharField(
-        verbose_name="Ингридиент",
+        verbose_name="Ингредиент",
         max_length=Limits.MAX_LEN_RECIPES_CHARFIELD.value,
+        db_index=True, 
     )
     measurement_unit = CharField(
         verbose_name="Единицы измерения",
         max_length=24,
+        db_index=True,
     )
+
 
     class Meta:
         verbose_name = "Ингридиент"
