@@ -245,15 +245,12 @@ class RecipeSerializer(ModelSerializer):
         """
         Обновляет информацию о рецепте.
         """
+        super().update(recipe, validated_data)
+
         tags = validated_data.pop("tags")
         ingredients = validated_data.pop("ingredients")
 
-        for key, value in validated_data.items():
-            if hasattr(recipe, key):
-                setattr(recipe, key, value)
-
         if tags:
-            recipe.tags.clear()
             recipe.tags.set(tags)
 
         if ingredients:
