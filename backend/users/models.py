@@ -114,29 +114,20 @@ class MyUser(AbstractUser):
 
     @classmethod
     def normalize_username(cls, username: str) -> str:
+        """
+        Нормализует имя пользователя, применяя Unicode-нормализацию
+        формы NFKC и делая первую букву заглавной.
+        """
         return unicodedata.normalize("NFKC", username).capitalize()
 
     def __normalize_human_names(self, name: str) -> str:
         """
-        Для нормализации адреса электронной почты
-        преобразуйте в нижний регистр часть с доменом.
+        Нормализует имена пользователей,
+        делая первую букву каждого слова заглавной.
+        Вместо этой реализации,
+        можно использовать встроенную функцию str.title().
         """
-        storage = [None] * len(name)
-        title = True
-        idx = 0
-        for letter in name:
-            letter = letter.lower()
-            if title:
-                if not letter.isalpha():
-                    continue
-                else:
-                    letter = letter.upper()
-                    title = False
-            elif letter in " -":
-                title = True
-            storage[idx] = letter
-            idx += 1
-        return "".join(storage[:idx])
+        return name.title()
 
     def clean(self) -> None:
         self.first_name = self.__normalize_human_names(self.first_name)
