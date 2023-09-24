@@ -98,11 +98,19 @@ class UserSubscribeSerializer(UserSerializer):
         )
         read_only_fields = ("__all__",)
 
-    def get_is_subscribed(*args) -> bool:
+    def get_is_subscribed(self, obj: User) -> bool:
         """
-        Возвращает True всегда, так как это сериализатор для подписки.
+        Проверяет, подписан ли текущий пользователь на пользователя obj.
+        :param obj: Пользователь, на которого проверяется подписка.
+        :return: True, если текущий пользователь подписан на пользователя obj,
+        иначе False.
         """
-        return True
+        user = self.context.get("request").user
+
+        if user.is_anonymous or (user == obj):
+            return False
+
+        return user.subscriptions.filter(author=obj).exists()
 
     def get_recipes_count(self, obj: User) -> int:
         """
