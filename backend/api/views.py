@@ -30,11 +30,13 @@ User = get_user_model()
 
 class BaseAPIRootView(APIRootView):
     """
+    Базовый класс для корневой точки API.
     """
 
 
 class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     """
+    Вьюсет для пользователей.
     """
 
     pagination_class = PageLimitPagination
@@ -45,6 +47,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     @action(detail=True, permission_classes=(IsAuthenticated,))
     def subscribe(self, request: WSGIRequest, id: int | str) -> Response:
         """
+        Действие для подписки на пользователя.
         """
 
     @subscribe.mapping.post
@@ -57,6 +60,9 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     def delete_subscribe(
         self, request: WSGIRequest, id: int | str
     ) -> Response:
+        """
+        Удаление подписки на пользователя.
+        """
         return self._delete_relation(Q(author__id=id))
 
     @action(
@@ -64,6 +70,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     )
     def subscriptions(self, request: WSGIRequest) -> Response:
         """
+        Получение списка подписок пользователя.
         """
         pages = self.paginate_queryset(
             User.objects.filter(subscribers__user=self.request.user)
@@ -74,6 +81,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
 
 class TagViewSet(ReadOnlyModelViewSet):
     """
+    Вьюсет для тегов.
     """
 
     queryset = Tag.objects.all()
@@ -83,6 +91,7 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 class IngredientViewSet(ReadOnlyModelViewSet):
     """
+    Вьюсет для ингредиентов.
     """
 
     queryset = Ingredient.objects.all()
@@ -91,6 +100,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self) -> list[Ingredient]:
         """
+        Получение списка ингредиентов с учетом параметра поиска.
         """
         name: str = self.request.query_params.get(UrlQueries.SEARCH_ING_NAME)
         queryset = self.queryset
@@ -109,8 +119,8 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
 class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     """
+    Вьюсет для рецептов.
     """
-
     queryset = Recipe.objects.select_related("author")
     serializer_class = RecipeSerializer
     permission_classes = (AuthorStaffOrReadOnly,)
@@ -119,6 +129,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
 
     def get_queryset(self) -> QuerySet[Recipe]:
         """
+        Получение списка рецептов с учетом фильтров.
         """
         queryset = self.queryset
 
@@ -151,6 +162,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     @action(detail=True, permission_classes=(IsAuthenticated,))
     def favorite(self, request: WSGIRequest, pk: int | str) -> Response:
         """
+        Действие для работы с избранными рецептами.
         """
 
     @favorite.mapping.post
@@ -170,6 +182,17 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     @action(detail=True, permission_classes=(IsAuthenticated,))
     def shopping_cart(self, request: WSGIRequest, pk: int | str) -> Response:
         """
+        Добавление рецепта в корзину покупок пользователя.
+
+        Args:
+            request (WSGIRequest): Запрос от клиента.
+            pk (int | str): Идентификатор рецепта,
+            который нужно добавить в корзину.
+
+        Returns:
+            Response: Ответ сервера,
+            обычно с информацией об успешном добавлении.
+
         """
 
     @shopping_cart.mapping.post
@@ -187,6 +210,17 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     @action(methods=("get",), detail=False)
     def download_shopping_cart(self, request: WSGIRequest) -> Response:
         """
+        Метод для конкретной реализации добавления рецепта в корзину.
+
+        Args:
+            request (WSGIRequest): Запрос от клиента.
+            pk (int | str): Идентификатор рецепта,
+            который нужно добавить в корзину.
+
+        Returns:
+            Response: Ответ сервера, обычно с
+            информацией об успешном добавлении.
+
         """
         user = self.request.user
         if not user.carts.exists():
