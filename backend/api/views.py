@@ -9,7 +9,7 @@ from api.serializers import (
     UserSubscribeSerializer,
 )
 from core.enums import Tuples, UrlQueries
-from core.services import create_shoping_list, maybe_incorrect_layout
+from core.services import create_shoping_list
 from django.contrib.auth import get_user_model
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q, QuerySet
@@ -23,7 +23,7 @@ from rest_framework.routers import APIRootView
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from users.models import Subscriptions
-
+from django_filters import rest_framework as filters
 
 User = get_user_model()
 
@@ -81,32 +81,20 @@ class TagViewSet(ReadOnlyModelViewSet):
     permission_classes = (AdminOrReadOnly,)
 
 
-class IngredientViewSet(ReadOnlyModelViewSet):
-    """
-    Вьюсет для ингредиентов.
-    """
+class IngredientFilter(filters.FilterSet):
+    search_name = filters.CharFilter(
+        field_name="name", lookup_expr="icontains")
 
+    class Meta:
+        model = Ingredient
+        fields = ["search_name"]
+
+
+class IngredientViewSet(ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly,)
-
-    def get_queryset(self) -> list[Ingredient]:
-        """
-        Получение списка ингредиентов с учетом параметра поиска.
-        """
-        name: str = self.request.query_params.get(UrlQueries.SEARCH_ING_NAME)
-        queryset = self.queryset
-
-        if not name:
-            return queryset
-
-        name = maybe_incorrect_layout(name)
-        start_queryset = queryset.filter(name__istartswith=name)
-        start_names = (ing.name for ing in start_queryset)
-        contain_queryset = queryset.filter(name__icontains=name).exclude(
-            name__in=start_names
-        )
-        return list(start_queryset) + list(contain_queryset)
+    filterset_class = IngredientFilter
 
 
 class RecipeViewSet(ModelViewSet, AddDelViewMixin):
