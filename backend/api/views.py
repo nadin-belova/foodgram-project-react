@@ -139,20 +139,12 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
 
         return queryset
 
-    @action(detail=True, permission_classes=(IsAuthenticated,))
-    def favorite(self, request: WSGIRequest, pk: int | str) -> Response:
-        """
-        Действие для работы с избранными рецептами.
-        """
-
-    @favorite.mapping.post
     def recipe_to_favorites(
         self, request: WSGIRequest, pk: int | str
     ) -> Response:
         self.link_model = Favorites
         return self._create_relation(pk)
 
-    @favorite.mapping.delete
     def remove_recipe_from_favorites(
         self, request: WSGIRequest, pk: int | str
     ) -> Response:
