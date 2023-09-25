@@ -25,7 +25,8 @@ from core.enums import Tuples, UrlQueries
 from core.services import create_shoping_list
 from recipes.models import Carts, Favorites, Ingredient, Recipe, Tag
 from users.models import Subscriptions
-
+from django_filters.rest_framework import DjangoFilterBackend
+from recipes.filters import RecipeFilter
 
 User = get_user_model()
 
@@ -103,6 +104,8 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     """
     Вьюсет для рецептов.
     """
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RecipeFilter
     queryset = Recipe.objects.select_related("author")
     serializer_class = RecipeSerializer
     permission_classes = (AuthorStaffOrReadOnly,)
@@ -114,10 +117,6 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         Получение списка рецептов с учетом фильтров.
         """
         queryset = self.queryset
-
-        tags: list = self.request.query_params.getlist(UrlQueries.TAGS.value)
-        if tags:
-            queryset = queryset.filter(tags__slug__in=tags).distinct()
 
         author: str = self.request.query_params.get(UrlQueries.AUTHOR.value)
         if author:
