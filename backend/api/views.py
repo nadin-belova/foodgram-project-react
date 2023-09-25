@@ -1,7 +1,15 @@
+from django.contrib.auth import get_user_model
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q, QuerySet
 from django.http.response import HttpResponse
-from django.contrib.auth import get_user_model
+from djoser.views import UserViewSet as DjoserUserViewSet
+from django_filters import rest_framework as filters
+from rest_framework.decorators import action
+from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.routers import APIRootView
+from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from api.mixins import AddDelViewMixin
 from api.paginators import PageLimitPagination
@@ -13,19 +21,10 @@ from api.serializers import (
     TagSerializer,
     UserSubscribeSerializer,
 )
-from rest_framework.decorators import action
-from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.routers import APIRootView
-from rest_framework.status import HTTP_400_BAD_REQUEST
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from users.models import Subscriptions
-from django_filters import rest_framework as filters
-
 from core.enums import Tuples, UrlQueries
 from core.services import create_shoping_list
-from djoser.views import UserViewSet as DjoserUserViewSet
 from recipes.models import Carts, Favorites, Ingredient, Recipe, Tag
+from users.models import Subscriptions
 
 
 User = get_user_model()
