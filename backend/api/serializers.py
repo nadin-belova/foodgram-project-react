@@ -107,7 +107,7 @@ class UserSubscribeSerializer(UserSerializer):
         """
         user = self.context.get("request").user
 
-        if user.is_anonymous or (user == obj):
+        if user.is_anonymous or user == obj:
             return False
 
         return user.subscriptions.filter(author=obj).exists()
