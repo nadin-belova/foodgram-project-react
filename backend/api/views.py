@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.handlers.wsgi import WSGIRequest
-from django.db.models import Q, QuerySet
+from django.db.models import Q
 from django.http.response import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django_filters import rest_framework as filters
@@ -21,12 +21,12 @@ from api.serializers import (
     TagSerializer,
     UserSubscribeSerializer,
 )
-from core.enums import Tuples, UrlQueries
 from core.services import create_shoping_list
 from recipes.models import Carts, Favorites, Ingredient, Recipe, Tag
 from users.models import Subscriptions
 from django_filters.rest_framework import DjangoFilterBackend
 from recipes.filters import RecipeFilter
+
 
 User = get_user_model()
 
@@ -111,34 +111,6 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     permission_classes = (AuthorStaffOrReadOnly,)
     pagination_class = PageLimitPagination
     add_serializer = ShortRecipeSerializer
-
-    def get_queryset(self) -> QuerySet[Recipe]:
-        """
-        Получение списка рецептов с учетом фильтров.
-        """
-        queryset = self.queryset
-
-        author: str = self.request.query_params.get(UrlQueries.AUTHOR.value)
-        if author:
-            queryset = queryset.filter(author=author)
-
-        # фильтры для авторизованного пользователя
-        if self.request.user.is_anonymous:
-            return queryset
-
-        is_in_cart: str = self.request.query_params.get(UrlQueries.SHOP_CART)
-        if is_in_cart in Tuples.SYMBOL_TRUE_SEARCH.value:
-            queryset = queryset.filter(in_carts__user=self.request.user)
-        elif is_in_cart in Tuples.SYMBOL_FALSE_SEARCH.value:
-            queryset = queryset.exclude(in_carts__user=self.request.user)
-
-        is_favorite: str = self.request.query_params.get(UrlQueries.FAVORITE)
-        if is_favorite in Tuples.SYMBOL_TRUE_SEARCH.value:
-            queryset = queryset.filter(in_favorites__user=self.request.user)
-        if is_favorite in Tuples.SYMBOL_FALSE_SEARCH.value:
-            queryset = queryset.exclude(in_favorites__user=self.request.user)
-
-        return queryset
 
     def recipe_to_favorites(
         self, request: WSGIRequest, pk: int | str
