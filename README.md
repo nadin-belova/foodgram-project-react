@@ -1,3 +1,25 @@
+# Foodgram
+
+### Ссылка на сайт 
+http://foodgram.gotdns.ch/recipes
+
+логин админки: adm
+пароль админки: adm
+эл почта админки: adm@adm.com
+
+### Автор
+https://github.com/nadin-belova
+
+
+## Tecnhologies
+
+- Python 3.11
+- Django 4.0
+- Django REST framework 3.14
+- Nginx
+- Docker
+- Postgres
+
 ### Проект Foodgram – Продуктовый помощник
 На этом сервисе пользователи смогут публиковать рецепты, подписываться 
 на публикации других пользователей, добавлять понравившиеся рецепты в список
