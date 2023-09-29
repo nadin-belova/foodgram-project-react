@@ -63,9 +63,14 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
         user_to_subscribe = self.get_object()
 
         if request.method == 'POST':
-            return self._create_relation(user_to_subscribe.id)
+            return self._create_relation(
+                user_to_subscribe.id, context={'request': request}
+            )
         elif request.method == 'DELETE':
-            return self._delete_relation(Q(author__id=user_to_subscribe.id))
+            return self._delete_relation(
+                Q(author__id=user_to_subscribe.id),
+                context={'request': request}
+            )
         else:
             return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
 
