@@ -8,7 +8,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.routers import APIRootView
-from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_405_METHOD_NOT_ALLOWED
+)
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from api.mixins import AddDelViewMixin
@@ -48,23 +51,21 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     link_model = Subscriptions
 
     @action(
-        methods=("post"), detail=True, permission_classes=(IsAuthenticated,)
+        methods=('post', 'delete'),
+        detail=True,
+        permission_classes=[IsAuthenticated]
     )
-    def create_subscribe(
-        self, request: WSGIRequest, id: int | str
-    ) -> Response:
-        return self._create_relation(id)
+    def subscribe(self, request, pk=None) -> Response:
+        user_to_subscribe = self.get_object()
 
-    @action(
-        methods=("delete"), detail=True, permission_classes=(IsAuthenticated,)
-    )
-    def delete_subscribe(
-        self, request: WSGIRequest, id: int | str
-    ) -> Response:
-        """
-        Удаление подписки на пользователя.
-        """
-        return self._delete_relation(Q(author__id=id))
+        if request.method == 'POST':
+            # Логика для создания подписки
+            return self._create_relation(user_to_subscribe.id)
+        elif request.method == 'DELETE':
+            # Логика для удаления подписки
+            return self._delete_relation(Q(author__id=user_to_subscribe.id))
+        else:
+            return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
 
     @action(
         methods=("get",), detail=False, permission_classes=(IsAuthenticated,)
