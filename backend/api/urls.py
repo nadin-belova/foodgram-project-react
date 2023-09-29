@@ -28,10 +28,10 @@ router.register("ingredients", IngredientViewSet, "ingredients")
 router.register("recipes", RecipeViewSet, "recipes")
 router.register("users", UserViewSet, "users")
 
-urlpatterns = (
+urlpatterns = [
     path("", include(router.urls)),
     path("auth/", include("djoser.urls.authtoken")),
-)
+]
 
 urlpatterns += [
     path(
