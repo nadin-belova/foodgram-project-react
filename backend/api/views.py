@@ -47,11 +47,17 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     add_serializer = UserSubscribeSerializer
     link_model = Subscriptions
 
+    @action(
+        methods=("post"), detail=True, permission_classes=(IsAuthenticated,)
+    )
     def create_subscribe(
         self, request: WSGIRequest, id: int | str
     ) -> Response:
         return self._create_relation(id)
 
+    @action(
+        methods=("delete"), detail=True, permission_classes=(IsAuthenticated,)
+    )
     def delete_subscribe(
         self, request: WSGIRequest, id: int | str
     ) -> Response:
