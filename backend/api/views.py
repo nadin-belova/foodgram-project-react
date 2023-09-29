@@ -53,16 +53,18 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     @action(
         methods=('post', 'delete'),
         detail=True,
-        permission_classes=[IsAuthenticated]
+        permission_classes=(IsAuthenticated,)
     )
-    def subscribe(self, request, pk=None) -> Response:
+    def subscribe(self, request, pk=None, *args, **kwargs) -> Response:
+        """
+        POST: подписка на пользователя.
+        DELETE: удаление подписки на пользователя.
+        """
         user_to_subscribe = self.get_object()
 
         if request.method == 'POST':
-            # Логика для создания подписки
             return self._create_relation(user_to_subscribe.id)
         elif request.method == 'DELETE':
-            # Логика для удаления подписки
             return self._delete_relation(Q(author__id=user_to_subscribe.id))
         else:
             return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
