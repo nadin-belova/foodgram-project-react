@@ -32,3 +32,16 @@ urlpatterns = (
     path("", include(router.urls)),
     path("auth/", include("djoser.urls.authtoken")),
 )
+
+urlpatterns += [
+    path(
+        "recipes/<int:pk>/favorite/",
+        RecipeViewSet.as_view({"post": "recipe_to_favorites"}),
+        name="recipe-to-favorites"
+    ),
+    path(
+        "recipes/<int:pk>/favorite/",
+        RecipeViewSet.as_view({"delete": "remove_recipe_from_favorites"}),
+        name="remove-recipe-from-favorites"
+    ),
+]
