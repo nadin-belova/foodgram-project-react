@@ -123,17 +123,22 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     pagination_class = PageLimitPagination
     add_serializer = ShortRecipeSerializer
 
-    def recipe_to_favorites(
+    @action(
+        methods=('post', 'delete'),
+        detail=True,
+        permission_classes=(IsAuthenticated,)
+    )
+    def favorite(
         self, request: WSGIRequest, pk: int | str
     ) -> Response:
         self.link_model = Favorites
-        return self._create_relation(pk)
 
-    def remove_recipe_from_favorites(
-        self, request: WSGIRequest, pk: int | str
-    ) -> Response:
-        self.link_model = Favorites
-        return self._delete_relation(Q(recipe__id=pk))
+        if request.method == 'POST':
+            return self._create_relation(pk)
+        elif request.method == 'DELETE':
+            return self._delete_relation(Q(recipe__id=pk))
+        else:
+            return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
 
     @action(detail=True, permission_classes=(IsAuthenticated,))
     def shopping_cart(self, request: WSGIRequest, pk: int | str) -> Response:
