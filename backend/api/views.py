@@ -161,7 +161,9 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         self, request: WSGIRequest, pk: int | str
     ) -> Response:
         self.link_model = Carts
-        return self._delete_relation(Q(recipe__id=pk))
+        return self._delete_relation(
+            Q(recipe__id=pk), context={'request': request}
+        )
 
     @action(methods=("get",), detail=False)
     def download_shopping_cart(self, request: WSGIRequest) -> Response:
