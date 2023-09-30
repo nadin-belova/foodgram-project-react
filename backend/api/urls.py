@@ -27,7 +27,7 @@ router.register("tags", TagViewSet, "tags")
 router.register("ingredients", IngredientViewSet, "ingredients")
 router.register("recipes", RecipeViewSet, "recipes")
 router.register(
-    r'recipes/(?P<pk>[^/.]+)/favorite',
+    r'recipes/(?P<recipe_pk>[^/.]+)/favorite',
     RecipeViewSet,
     basename='recipe-favorite'
 )
