@@ -154,7 +154,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     @shopping_cart.mapping.post
     def recipe_to_cart(self, request: WSGIRequest, pk: int | str) -> Response:
         self.link_model = Carts
-        return self._create_relation(pk)
+        return self._create_relation(pk, context={'request': request})
 
     @shopping_cart.mapping.delete
     def remove_recipe_from_cart(
