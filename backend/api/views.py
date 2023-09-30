@@ -134,9 +134,11 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         self.link_model = Favorites
 
         if request.method == 'POST':
-            return self._create_relation(pk)
+            return self._create_relation(pk, context={'request': request})
         elif request.method == 'DELETE':
-            return self._delete_relation(Q(recipe__id=pk))
+            return self._delete_relation(
+                Q(recipe__id=pk), context={'request': request}
+            )
         else:
             return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
 
