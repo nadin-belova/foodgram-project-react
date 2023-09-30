@@ -26,9 +26,16 @@ router = RuDefaultRouter()
 router.register("tags", TagViewSet, "tags")
 router.register("ingredients", IngredientViewSet, "ingredients")
 router.register("recipes", RecipeViewSet, "recipes")
+router.register(
+    r'recipes/(?P<pk>[^/.]+)/favorite',
+    RecipeViewSet,
+    basename='recipe-favorite'
+)
 router.register("users", UserViewSet, "users")
 router.register(
-    r'users/(?P<pk>[^/.]+)/subscribe', UserViewSet, basename='user-subscribe'
+    r'users/(?P<pk>[^/.]+)/subscribe',
+    UserViewSet,
+    basename='user-subscribe'
 )
 
 urlpatterns = [
