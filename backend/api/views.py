@@ -61,9 +61,11 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
         DELETE: удаление подписки на пользователя.
         """
         if request.method == 'POST':
-            return self._create_relation(id)
+            return self._create_relation(id, context={'request': request})
         elif request.method == 'DELETE':
-            return self._delete_relation(Q(author__id=id))
+            return self._delete_relation(
+                Q(author__id=id), context={'request': request}
+            )
         else:
             return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
 
