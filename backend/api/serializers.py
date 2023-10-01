@@ -21,6 +21,7 @@ class ShortRecipeSerializer(ModelSerializer):
     """
     Сериализатор для краткой информации о рецептах.
     """
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -122,14 +123,13 @@ class UserSubscribeSerializer(UserSerializer):
         """
         Возвращает список рецептов пользователя с ограничением по лимиту.
         """
-        from api.serializers import RecipeShortSerializer
         request = self.context.get('request')
         limit = request.GET.get('recipes_limit')
         recipes = obj.recipes.all()
 
         if limit:
             recipes = recipes[:int(limit)]
-        serializer = RecipeShortSerializer(recipes, many=True, read_only=True)
+        serializer = ShortRecipeSerializer(recipes, many=True, read_only=True)
         return serializer.data
 
 
