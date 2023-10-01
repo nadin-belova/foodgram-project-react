@@ -81,8 +81,8 @@ class UserSubscribeSerializer(UserSerializer):
     Сериализатор для подписки на пользователей.
     """
 
-    recipes = ShortRecipeSerializer(many=True, read_only=True)
-    recipes_count = SerializerMethodField()
+    recipes_count = SerializerMethodField(method_name='get_recipes_count')
+    recipes = SerializerMethodField(method_name='get_recipes')
 
     class Meta:
         model = User
@@ -117,6 +117,20 @@ class UserSubscribeSerializer(UserSerializer):
         Возвращает количество рецептов пользователя.
         """
         return obj.recipes.count()
+
+    def get_recipes(self, obj):
+        """
+        Возвращает список рецептов пользователя с ограничением по лимиту.
+        """
+        from api.serializers import RecipeShortSerializer
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes = obj.recipes.all()
+
+        if limit:
+            recipes = recipes[:int(limit)]
+        serializer = RecipeShortSerializer(recipes, many=True, read_only=True)
+        return serializer.data
 
 
 class TagSerializer(ModelSerializer):
